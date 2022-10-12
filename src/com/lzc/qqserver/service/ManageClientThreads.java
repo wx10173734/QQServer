@@ -35,4 +35,9 @@ public class ManageClientThreads {
         }
         return onlineUserList;
     }
+
+    //从集合中，移除某个线程对象
+    public static void removeServerConnectClientThread(String userId) {
+        hm.remove(userId);
+    }
 }
