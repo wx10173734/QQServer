@@ -70,21 +70,25 @@ public class ServerConnectClientThread extends Thread {
                     //在得到对应socket对象输出流，将Message对象转发给指定的客户端
                     ObjectOutputStream oos = new ObjectOutputStream(serverConnectClientThread.getSocket().getOutputStream());
                     oos.writeObject(message);//转发，提示如果客户不在线，可以保存到数据库，这样可以实现离线留言
-                }else if (message.getMesType().equals(MessageType.MESSAGE_TOALL_MES)){
+                } else if (message.getMesType().equals(MessageType.MESSAGE_TOALL_MES)) {
                     //需要遍历 管理线程的集合，把所有的线程的socket都得到，然后转发message即可
                     HashMap<String, ServerConnectClientThread> hm = ManageClientThreads.getHm();
                     Iterator<String> iterator = hm.keySet().iterator();
                     while (iterator.hasNext()) {
                         //取出在线用户的id
-                        String onlineUserId =  iterator.next().toString();
-                        if (!onlineUserId.equals(message.getSender())){//排除群发消息的这个用户
+                        String onlineUserId = iterator.next().toString();
+                        if (!onlineUserId.equals(message.getSender())) {//排除群发消息的这个用户
                             //进行转发message
                             ObjectOutputStream oos = new ObjectOutputStream(hm.get(onlineUserId).getSocket().getOutputStream());
                             oos.writeObject(message);//转发
                         }
-                        
+
                     }
-                }else {
+                } else if (message.getMesType().equals(MessageType.MESSAGE_FilE_MES)) {
+                    //根据gettid 获取对应线程，将Message对象转发
+                    ObjectOutputStream oos = new ObjectOutputStream(ManageClientThreads.getServerConnectClientThread(message.getGetter()).getSocket().getOutputStream());
+                    oos.writeObject(message);
+                } else {
                     System.out.println("其他类型的message暂时不处理");
                 }
             } catch (Exception e) {
