@@ -14,6 +14,11 @@ import java.util.Set;
 public class ManageClientThreads {
     private static HashMap<String, ServerConnectClientThread> hm = new HashMap<>();
 
+    //返回 hm
+    public static HashMap<String, ServerConnectClientThread> getHm() {
+        return hm;
+    }
+
     //添加线程对象到hm集合
     public static void addClientThread(String userId, ServerConnectClientThread serverConnectClientThread) {
         hm.put(userId, serverConnectClientThread);
@@ -40,4 +45,6 @@ public class ManageClientThreads {
     public static void removeServerConnectClientThread(String userId) {
         hm.remove(userId);
     }
+
+
 }
